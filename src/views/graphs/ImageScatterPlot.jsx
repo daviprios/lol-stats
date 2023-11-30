@@ -69,7 +69,7 @@ export default function ImageScatterPlot() {
           y: "winRate",
           r: 20,
           preserveAspectRatio: "xMidYMin slice",
-          src: (d) => `/champions/${d.championName}.png`,
+          src: (d) => `/imgs/champions/${d.championName}.png`,
           width: 40,
           title: "championName",
         }),
