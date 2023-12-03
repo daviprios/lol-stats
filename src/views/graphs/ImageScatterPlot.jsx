@@ -81,5 +81,9 @@ export default function ImageScatterPlot() {
     return () => plot.remove();
   }, [playerData]);
 
-  return <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />;
+  return (
+    <section>
+      <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
+    </section>
+  );
 }

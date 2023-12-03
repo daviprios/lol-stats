@@ -25,10 +25,7 @@ export default function HeatMap() {
     })
   );
 
-  console.debug(heatMapData);
-
   useEffect(() => {
-    console.debug(containerRef);
     if (heatMapData === undefined || !containerRef.current) return;
 
     const plot = Plot.plot({
@@ -69,5 +66,9 @@ export default function HeatMap() {
     return () => plot.remove();
   }, [heatMapData]);
 
-  return <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />;
+  return (
+    <section>
+      <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
+    </section>
+  );
 }

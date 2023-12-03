@@ -9,9 +9,9 @@ export default function App() {
     <MatchContext>
       <main className="bg-slate-700">
         <header className="flex flex-col items-center mb-4">
-          <p className="text-white text-2xl font-bold py-4">
+          <h1 className="text-white text-2xl font-bold py-4">
             Visualização de Dados
-          </p>
+          </h1>
           <label className="text-white">
             <span className="pr-2">Riot ID</span>
             <input
@@ -23,14 +23,11 @@ export default function App() {
         </header>
 
         <article className="flex items-center py-4 flex-col gap-y-2">
-          <section className="flex gap-x-2">
-            <ImageScatterPlot />
-            <MultiLineLabeled />
-          </section>
-          <section className="flex gap-x-2">
-            <GraphPlot />
-            <HeatMap />
-          </section>
+          <p className="text-white">Gráficos</p>
+          <ImageScatterPlot />
+          <MultiLineLabeled />
+          <GraphPlot />
+          <HeatMap />
         </article>
       </main>
     </MatchContext>

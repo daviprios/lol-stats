@@ -6,6 +6,10 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
+import moment from "moment";
+import "moment/dist/locale/pt-br";
+moment.locale("pt-br");
+
 import { compress, decompress } from "lz-string";
 
 const queryClient = new QueryClient({
