@@ -2,6 +2,7 @@ import ImageScatterPlot from "./views/graphs/ImageScatterPlot";
 import MultiLineLabeled from "./views/graphs/MultiLineLabeled";
 import GraphPlot from "./views/graphs/GraphPlot";
 import MatchContext from "./contexts/matchContext";
+import HeatMap from "./views/graphs/HeatMap";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           </section>
           <section className="flex gap-x-2">
             <GraphPlot />
+            <HeatMap />
           </section>
         </article>
       </main>
