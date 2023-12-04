@@ -5,7 +5,8 @@ import { useMatchContext } from "../contexts/matchContext";
 import data from "../data/testData";
 
 export default function MatchSelector() {
-  const { currentMatch, setCurrentMatch, playerUuid } = useMatchContext();
+  const { currentMatch, setCurrentMatch, setMatchChampion, playerUuid } =
+    useMatchContext();
 
   useEffect(() => {
     setCurrentMatch(data[0].metadata.matchId);
@@ -27,6 +28,7 @@ export default function MatchSelector() {
               <li key={matchId}>
                 <button
                   onClick={() => {
+                    setMatchChampion(undefined);
                     setCurrentMatch(matchId);
                   }}
                   className={`flex ${
