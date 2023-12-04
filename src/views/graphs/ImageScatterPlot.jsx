@@ -68,27 +68,34 @@ export default function ImageScatterPlot() {
           x: "pickRate",
           y: "winRate",
           r: 20,
-          // filter: (d) =>
-          //   globalChampion ? d.championName === globalChampion : true,
           opacity: (d) =>
             globalChampion && d.championName !== globalChampion ? 0.1 : 1,
           preserveAspectRatio: "xMidYMin slice",
           src: (d) => `/imgs/champions/${d.championName}.png`,
           width: 40,
-          channels: {
-            championName: {
-              label: "",
-              value: "championName",
+        }),
+        Plot.tip(
+          playerData,
+          Plot.pointer({
+            x: (d) => d.pickRate,
+            y: (d) => d.winRate,
+            filter: (d) =>
+              globalChampion && d.championName !== globalChampion
+                ? false
+                : true,
+            channels: {
+              championName: {
+                label: "",
+                value: "championName",
+              },
             },
-          },
-          tip: {
             format: {
               championName: true,
               x: (x) => `${(x * 100).toFixed(0)}%`,
               y: (y) => `${(y * 100).toFixed(0)}%`,
             },
-          },
-        }),
+          })
+        ),
       ],
     });
 
@@ -97,12 +104,10 @@ export default function ImageScatterPlot() {
     return () => plot.remove();
   }, [globalChampion, playerData]);
 
-  console.debug(globalChampion);
-
   return (
-    <section className="flex flex-col gap-x-4">
+    <section className="flex flex-col">
       <h2 className="text-white m-auto">Relação Vitória/Escolha</h2>
-      <div className="flex">
+      <div className="flex gap-x-4">
         <div className="bg-slate-700 border-2 border-white flex px-4 justify-center items-center">
           <ul className="bg-white overflow-y-auto overflow-x-hidden h-[400px] w-40">
             {playerData

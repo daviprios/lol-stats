@@ -1,6 +1,6 @@
 import * as Plot from "@observablehq/plot";
 import moment from "moment";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import testData from "../../data/testData";
 import { useMatchContext } from "../../contexts/matchContext";
@@ -15,7 +15,7 @@ const properties = {
 };
 
 export default function MultiLineLabeled() {
-  const { playerUuid } = useMatchContext();
+  const { playerUuid, globalChampion } = useMatchContext();
   const containerRef = useRef(null);
 
   const [parameter, setParameter] = useState(properties.gold);
@@ -45,6 +45,11 @@ export default function MultiLineLabeled() {
     })
   );
 
+  const filter = useCallback(
+    (championName) => (globalChampion ? globalChampion === championName : true),
+    [globalChampion]
+  );
+
   useEffect(() => {
     if (playerData === undefined || !containerRef.current) return;
 
@@ -55,7 +60,8 @@ export default function MultiLineLabeled() {
         Plot.ruleY([0]),
         Plot.lineY(playerData, {
           filter: (d) =>
-            result === "ALL" ? true : result === "WIN" ? d.win : !d.win,
+            (result === "ALL" ? true : result === "WIN" ? d.win : !d.win) &&
+            filter(d[properties.championName]),
           x: properties.time,
           y: parameter,
           marker: "circle",
@@ -68,11 +74,21 @@ export default function MultiLineLabeled() {
         }),
         Plot.ruleX(
           playerData,
-          Plot.pointerX({ x: (d) => d.time, py: parameter, stroke: "red" })
+          Plot.pointerX({
+            x: properties.time,
+            py: parameter,
+            stroke: "red",
+            filter: (d) => filter(d[properties.championName]),
+          })
         ),
         Plot.dot(
           playerData,
-          Plot.pointerX({ x: (d) => d.time, y: parameter, stroke: "red" })
+          Plot.pointerX({
+            x: properties.time,
+            y: parameter,
+            stroke: "red",
+            filter: (d) => filter(d[properties.championName]),
+          })
         ),
       ],
     });
@@ -80,11 +96,11 @@ export default function MultiLineLabeled() {
     containerRef.current.append(plot);
 
     return () => plot.remove();
-  }, [playerData, result, parameter]);
+  }, [playerData, result, parameter, filter]);
 
   return (
     <section className="flex flex-col">
-      <h2></h2>
+      <h2 className="text-white m-auto">Estudo de parâmetros</h2>
       <div className="flex justify-between py-1">
         <label>
           <span className="text-white pr-1">Parâmetro</span>
