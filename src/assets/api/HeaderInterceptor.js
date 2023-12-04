@@ -1,4 +1,4 @@
-const token = import.meta.env["X-Riot-Token"];
+const token = import.meta.env["XRiotToken"];
 
 export default function HeaderInterceptor({ headers, ...options }) {
   return {
