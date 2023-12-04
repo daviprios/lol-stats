@@ -54,7 +54,7 @@ export default function MatchSelector() {
                     </div>
                     <div className="flex justify-between w-full">
                       <span className="text-sm">
-                        {moment(gameStartTimestamp).format("l")}
+                        {moment(gameStartTimestamp).format("L")}
                       </span>
                       <span className="font-semibold">
                         {moment

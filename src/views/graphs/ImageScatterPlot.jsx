@@ -1,6 +1,6 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import json from "../../data/testData";
 import { useMatchContext } from "../../contexts/matchContext";
@@ -9,7 +9,7 @@ export default function ImageScatterPlot() {
   const { playerUuid, setGlobalChampion, globalChampion } = useMatchContext();
   const containerRef = useRef(null);
 
-  const [playerData] = useState(() => {
+  const playerData = useMemo(() => {
     let totalPicks = 0;
     const formatedData = json
       .map(({ info: { participants } }) =>
@@ -38,7 +38,7 @@ export default function ImageScatterPlot() {
       });
     });
     return data;
-  });
+  }, [playerUuid]);
 
   useEffect(() => {
     if (playerData === undefined || !containerRef.current) return;

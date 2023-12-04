@@ -57,20 +57,6 @@ export default function GraphPlot() {
     [matchData, participants]
   );
 
-  console.debug(
-    matchData.timeline.info.frames.map(({ events }) =>
-      events
-        .filter(({ type }) => type === "CHAMPION_KILL")
-        .map(({ killerId, victimId, ...rest }) => {
-          return {
-            killer: [championByParticipantId[killerId], killerId],
-            victim: [championByParticipantId[victimId], victimId],
-            rest,
-          };
-        })
-    )
-  );
-
   const killerVictimRelation = useMemo(
     () =>
       matchData.timeline.info.frames.flatMap(({ events }) => {

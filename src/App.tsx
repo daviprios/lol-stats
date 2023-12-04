@@ -1,10 +1,12 @@
 import { useMatchContext } from "./contexts/matchContext";
 
+import MatchSelector from "./views/MatchSelector";
+import MatchChampionSelector from "./views/MatchChampionSelector";
+
 import ImageScatterPlot from "./views/graphs/ImageScatterPlot";
 import MultiLineLabeled from "./views/graphs/MultiLineLabeled";
 import GraphPlot from "./views/graphs/GraphPlot";
 import HeatMap from "./views/graphs/HeatMap";
-import MatchSelector from "./views/MatchSelector";
 
 export default function App() {
   const { currentMatch } = useMatchContext();
@@ -42,6 +44,7 @@ export default function App() {
           ) : (
             <></>
           )}
+          <MatchChampionSelector />
         </div>
       </article>
     </main>

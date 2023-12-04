@@ -9,11 +9,11 @@ const matchContext = createContext<{
   playerUuid: string;
   matchList: string[];
   currentMatch: string | undefined;
-  setCurrentMatch: (matchId: string) => void;
+  setCurrentMatch: (matchId: string | undefined) => void;
   globalChampion: string | undefined;
-  setGlobalChampion: (championName: string) => void;
+  setGlobalChampion: (championName: string | undefined) => void;
   matchChampion: string | undefined;
-  setMatchChampion: (championName: string) => void;
+  setMatchChampion: (championName: string | undefined) => void;
 }>({
   riotId: "",
   setRiotId: () => {},
