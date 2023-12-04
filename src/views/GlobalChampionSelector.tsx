@@ -4,22 +4,27 @@ import { useMatchContext } from "../contexts/matchContext";
 import jsonData from "../data/testData";
 
 export default function GlobalChampionSelector() {
-  const { setGlobalChampion, globalChampion } = useMatchContext();
+  const { setGlobalChampion, globalChampion, playerUuid } = useMatchContext();
   const championList = useMemo(
     () =>
-      jsonData.flatMap(({ info }) =>
-        info.participants
-          .map(({ championName }) => championName)
-          .toSorted((championNameA, championNameB) =>
-            championNameA > championNameB ? 1 : -1
+      Array.from(
+        jsonData
+          .flatMap(({ info }) =>
+            info.participants.filter(({ puuid }) => puuid === playerUuid)
           )
+          .reduce(
+            (acc, { championName }) => acc.add(championName),
+            new Set<string>()
+          )
+      ).toSorted((championNameA, championNameB) =>
+        championNameA > championNameB ? 1 : -1
       ),
     []
   );
 
   return (
-    <div className="bg-slate-700 border-2 border-white flex p-4 justify-center items-center mr-4 h-[400px] sticky top-4">
-      <ul className="bg-white overflow-y-auto overflow-x-hidden h-full w-40">
+    <div className="bg-slate-700 border-2 border-white flex p-4 justify-center items-center mr-4 h-fit sticky top-4">
+      <ul className="bg-white overflow-y-auto overflow-x-hidden max-h-[400px] w-40">
         {championList.map((championName) => {
           return (
             <li key={championName}>
