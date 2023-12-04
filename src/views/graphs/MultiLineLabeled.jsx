@@ -65,19 +65,23 @@ export default function MultiLineLabeled() {
           x: properties.time,
           y: parameter,
           marker: "circle",
-          tip: {
-            pointer: "x",
+        }),
+        Plot.tip(
+          playerData,
+          Plot.pointerX({
+            x: properties.time,
+            y: parameter,
             format: {
               x: (x) => moment(x).format("L HH:mm"),
             },
-          },
-        }),
+          })
+        ),
         Plot.ruleX(
           playerData,
           Plot.pointerX({
             x: properties.time,
             py: parameter,
-            stroke: "red",
+            stroke: "rgb(51, 65, 85)",
             filter: (d) => filter(d[properties.championName]),
           })
         ),
@@ -86,7 +90,7 @@ export default function MultiLineLabeled() {
           Plot.pointerX({
             x: properties.time,
             y: parameter,
-            stroke: "red",
+            stroke: "rgb(51, 65, 85)",
             filter: (d) => filter(d[properties.championName]),
           })
         ),
