@@ -1,75 +1,127 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import infoJson from "../../assets/data/BR1_2736749630-info.json";
-import timelineJson from "../../assets/data/BR1_2736749630-timeline.json";
-
-const participants = infoJson.info.participants.map(
-  ({ puuid, championName, teamId }) => {
-    return { puuid, championName, teamId };
-  }
-);
-
-const participantsSortedByTeam = participants.sort(
-  ({ teamId: teamIdA }, { teamId: teamIdB }) => (teamIdA > teamIdB ? 1 : -1)
-);
-
-const championByParticipantId = timelineJson.info.participants
-  .map(({ puuid, participantId }) => {
-    return {
-      participantId,
-      championName: participants.find(({ puuid: ppuuid }) => puuid === ppuuid),
-    };
-  })
-  .reduce((acc, { championName, participantId }) => {
-    return { ...acc, [participantId]: championName };
-  }, {});
-
-const killerVictimRelation = timelineJson.info.frames.flatMap(({ events }) => {
-  return events
-    .filter(({ type }) => type === "CHAMPION_KILL")
-    .map(({ killerId, victimId }) => {
-      return {
-        killer: championByParticipantId[killerId],
-        victim: championByParticipantId[victimId],
-      };
-    });
-});
-
-const killGraph = killerVictimRelation.reduce(
-  (
-    acc,
-    { killer: { championName: killer }, victim: { championName: victim } }
-  ) => {
-    const kills = acc[killer] || {};
-    kills[victim] = (kills[victim] ?? 0) + 1;
-    acc[killer] = kills;
-    return acc;
-  },
-  {}
-);
-
-Object.values(championByParticipantId).map(({ championName }) => championName);
+import jsonData from "../../data/testData";
+import jsonDataTimeline from "../../data/testDataTimeline";
+import { useMatchContext } from "../../contexts/matchContext";
 
 export default function GraphPlot() {
   const containerRef = useRef(null);
-  const [dataNodes] = useState(
-    [
-      d3.pointRadial((Math.PI * 11) / 6, 70),
-      d3.pointRadial((Math.PI * 10) / 6, 70),
-      d3.pointRadial((Math.PI * 9) / 6, 70),
-      d3.pointRadial((Math.PI * 8) / 6, 70),
-      d3.pointRadial((Math.PI * 7) / 6, 70),
+  const { currentMatch } = useMatchContext();
 
-      d3.pointRadial((Math.PI * 1) / 6, 70),
-      d3.pointRadial((Math.PI * 2) / 6, 70),
-      d3.pointRadial((Math.PI * 3) / 6, 70),
-      d3.pointRadial((Math.PI * 4) / 6, 70),
-      d3.pointRadial((Math.PI * 5) / 6, 70),
-    ].map((coord, i) => {
-      return [...coord, participantsSortedByTeam[i].championName];
-    })
+  const matchData = useMemo(
+    () => ({
+      data: jsonData.find(
+        ({ metadata: { matchId } }) => currentMatch === matchId
+      ),
+      timeline: jsonDataTimeline.find(
+        ({ metadata: { matchId } }) => currentMatch === matchId
+      ),
+    }),
+    [currentMatch]
+  );
+
+  const participants = useMemo(
+    () =>
+      matchData.data.info.participants.map(
+        ({ puuid, championName, teamId }) => {
+          return { puuid, championName, teamId };
+        }
+      ),
+    [matchData]
+  );
+
+  const participantsSortedByTeam = useMemo(
+    () =>
+      participants.sort(({ teamId: teamIdA }, { teamId: teamIdB }) =>
+        teamIdA > teamIdB ? 1 : -1
+      ),
+    [participants]
+  );
+
+  const championByParticipantId = useMemo(
+    () =>
+      matchData.timeline.info.participants
+        .map(({ puuid, participantId }) => {
+          return {
+            participantId,
+            championName: participants.find(
+              ({ puuid: ppuuid }) => puuid === ppuuid
+            ),
+          };
+        })
+        .reduce((acc, { championName, participantId }) => {
+          return { ...acc, [participantId]: championName };
+        }, {}),
+    [matchData, participants]
+  );
+
+  console.debug(
+    matchData.timeline.info.frames.map(({ events }) =>
+      events
+        .filter(({ type }) => type === "CHAMPION_KILL")
+        .map(({ killerId, victimId, ...rest }) => {
+          return {
+            killer: [championByParticipantId[killerId], killerId],
+            victim: [championByParticipantId[victimId], victimId],
+            rest,
+          };
+        })
+    )
+  );
+
+  const killerVictimRelation = useMemo(
+    () =>
+      matchData.timeline.info.frames.flatMap(({ events }) => {
+        return events
+          .filter(({ type }) => type === "CHAMPION_KILL")
+          .map(({ killerId, victimId }) => {
+            return {
+              killer: championByParticipantId[killerId],
+              victim: championByParticipantId[victimId],
+            };
+          })
+          .filter(({ killer }) => killer);
+      }),
+    [championByParticipantId, matchData]
+  );
+
+  const killGraph = useMemo(
+    () =>
+      killerVictimRelation.reduce(
+        (
+          acc,
+          { killer: { championName: killer }, victim: { championName: victim } }
+        ) => {
+          const kills = acc[killer] || {};
+          kills[victim] = (kills[victim] ?? 0) + 1;
+          acc[killer] = kills;
+          return acc;
+        },
+        {}
+      ),
+    [killerVictimRelation]
+  );
+
+  const dataNodes = useMemo(
+    () =>
+      [
+        d3.pointRadial((Math.PI * 11) / 6, 70),
+        d3.pointRadial((Math.PI * 10) / 6, 70),
+        d3.pointRadial((Math.PI * 9) / 6, 70),
+        d3.pointRadial((Math.PI * 8) / 6, 70),
+        d3.pointRadial((Math.PI * 7) / 6, 70),
+
+        d3.pointRadial((Math.PI * 1) / 6, 70),
+        d3.pointRadial((Math.PI * 2) / 6, 70),
+        d3.pointRadial((Math.PI * 3) / 6, 70),
+        d3.pointRadial((Math.PI * 4) / 6, 70),
+        d3.pointRadial((Math.PI * 5) / 6, 70),
+      ].map((coord, i) => {
+        return [...coord, participantsSortedByTeam[i].championName];
+      }),
+    [participantsSortedByTeam]
   );
 
   const getEdgesData = useCallback(() => {
@@ -87,6 +139,9 @@ export default function GraphPlot() {
           ).teamId === 100
             ? "blue"
             : "red";
+
+        console.debug(killGraph, victimList, dataNodes);
+
         return {
           killer: {
             x: killerNode[0],
@@ -103,7 +158,7 @@ export default function GraphPlot() {
         };
       });
     });
-  }, [dataNodes]);
+  }, [dataNodes, killGraph, participantsSortedByTeam]);
 
   const [dataEdges, setDataEdges] = useState(getEdgesData());
   useEffect(() => {
@@ -124,7 +179,7 @@ export default function GraphPlot() {
   );
 
   useEffect(() => {
-    if (dataEdges === undefined || !containerRef.current) return;
+    if (dataEdges === undefined || !containerRef.current || !matchData) return;
 
     const plot = Plot.plot({
       inset: 60,
@@ -166,7 +221,13 @@ export default function GraphPlot() {
     containerRef.current.append(plot);
 
     return () => plot.remove();
-  }, [dataEdges, dataNodes, getKillVictimInfo]);
+  }, [
+    dataEdges,
+    dataNodes,
+    getKillVictimInfo,
+    matchData,
+    participantsSortedByTeam,
+  ]);
 
   return (
     <section>

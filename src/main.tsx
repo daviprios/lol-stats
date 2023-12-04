@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+
+import { compress, decompress } from "lz-string";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
@@ -10,7 +12,7 @@ import moment from "moment";
 import "moment/dist/locale/pt-br";
 moment.locale("pt-br");
 
-import { compress, decompress } from "lz-string";
+import MatchContext from "./contexts/matchContext";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: Infinity } },
@@ -29,7 +31,9 @@ persistQueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <MatchContext>
+        <App />
+      </MatchContext>
     </QueryClientProvider>
   </React.StrictMode>
 );
