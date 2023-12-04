@@ -8,7 +8,7 @@ import { useMatchContext } from "../../contexts/matchContext";
 
 export default function GraphPlot() {
   const containerRef = useRef(null);
-  const { currentMatch } = useMatchContext();
+  const { currentMatch, matchChampion } = useMatchContext();
 
   const matchData = useMemo(
     () => ({
@@ -183,9 +183,11 @@ export default function GraphPlot() {
           x2: ({ victim }) => victim.x,
           y2: ({ victim }) => victim.y,
           bend: true,
-          // filter: (d) =>
-          //   d.victim.championName === "Sett" ||
-          //   d.killer.championName === "Sett",
+          filter: (d) =>
+            matchChampion
+              ? d.victim.championName === matchChampion ||
+                d.killer.championName === matchChampion
+              : true,
           stroke: ({ color }) => color,
           strokeWidth: ({ amount }) => amount,
           strokeLinejoin: "miter",
@@ -211,6 +213,7 @@ export default function GraphPlot() {
     getKillVictimInfo,
     matchData,
     participantsSortedByTeam,
+    matchChampion,
   ]);
 
   return (
