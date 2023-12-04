@@ -6,7 +6,7 @@ import json from "../../data/testData";
 import { useMatchContext } from "../../contexts/matchContext";
 
 export default function ImageScatterPlot() {
-  const { playerUuid, setGlobalChampion, globalChampion } = useMatchContext();
+  const { playerUuid, globalChampion } = useMatchContext();
   const containerRef = useRef(null);
 
   const playerData = useMemo(() => {
@@ -106,43 +106,10 @@ export default function ImageScatterPlot() {
 
   return (
     <section className="flex flex-col">
-      <h2 className="text-white m-auto">Relação Vitória/Escolha</h2>
-      <div className="flex gap-x-4">
-        <div className="bg-slate-700 border-2 border-white flex px-4 justify-center items-center">
-          <ul className="bg-white overflow-y-auto overflow-x-hidden h-[400px] w-40">
-            {playerData
-              .toSorted(
-                (
-                  { championName: championNameA },
-                  { championName: championNameB }
-                ) => (championNameA > championNameB ? 1 : -1)
-              )
-              .map(({ championName }) => {
-                return (
-                  <li key={championName}>
-                    <button
-                      className={`p-1 flex gap-x-2 items-center hover:bg-slate-400 w-full ${
-                        championName === globalChampion ? "bg-slate-300" : ""
-                      }`}
-                      onClick={() =>
-                        globalChampion === championName
-                          ? setGlobalChampion()
-                          : setGlobalChampion(championName)
-                      }
-                    >
-                      <img
-                        src={`/imgs/champions/${championName}.png`}
-                        className={"w-7 h-7"}
-                      />
-                      <span>{championName}</span>
-                    </button>
-                  </li>
-                );
-              })}
-          </ul>
-        </div>
-        <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
-      </div>
+      <h2 className="text-center text-white text-xl font-semibold">
+        Relação Vitória/Escolha
+      </h2>
+      <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
     </section>
   );
 }

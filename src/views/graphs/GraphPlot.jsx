@@ -215,10 +215,21 @@ export default function GraphPlot() {
     containerRef.current.append(plot);
 
     return () => plot.remove();
-  }, [dataEdges, dataNodes, getKillVictimInfo, matchData, participantsSortedByTeam, matchChampion, filter]);
+  }, [
+    dataEdges,
+    dataNodes,
+    getKillVictimInfo,
+    matchData,
+    participantsSortedByTeam,
+    matchChampion,
+    filter,
+  ]);
 
   return (
     <section>
+      <h2 className="text-center text-white text-xl font-semibold">
+        Relação assassino-vitima
+      </h2>
       <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
     </section>
   );

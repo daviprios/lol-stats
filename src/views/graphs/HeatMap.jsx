@@ -116,6 +116,9 @@ export default function HeatMap() {
 
   return (
     <section>
+      <h2 className="text-center text-white text-xl font-semibold">
+        Heatmap dos jogadores
+      </h2>
       <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
     </section>
   );

@@ -111,7 +111,9 @@ export default function MultiLineLabeled() {
 
   return (
     <section className="flex flex-col">
-      <h2 className="text-white m-auto">Estudo de parâmetros</h2>
+      <h2 className="text-center text-white text-xl font-semibold">
+        Estudo de parâmetros
+      </h2>
       <div className="flex justify-between py-1">
         <label>
           <span className="text-white pr-1">Parâmetro</span>
