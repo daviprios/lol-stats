@@ -69,6 +69,9 @@ export default function MultiLineLabeled() {
         Plot.tip(
           playerData,
           Plot.pointerX({
+            filter: (d) =>
+              (result === "ALL" ? true : result === "WIN" ? d.win : !d.win) &&
+              filter(d[properties.championName]),
             x: properties.time,
             y: parameter,
             format: {
@@ -82,7 +85,9 @@ export default function MultiLineLabeled() {
             x: properties.time,
             py: parameter,
             stroke: "rgb(51, 65, 85)",
-            filter: (d) => filter(d[properties.championName]),
+            filter: (d) =>
+              (result === "ALL" ? true : result === "WIN" ? d.win : !d.win) &&
+              filter(d[properties.championName]),
           })
         ),
         Plot.dot(
@@ -91,7 +96,9 @@ export default function MultiLineLabeled() {
             x: properties.time,
             y: parameter,
             stroke: "rgb(51, 65, 85)",
-            filter: (d) => filter(d[properties.championName]),
+            filter: (d) =>
+              (result === "ALL" ? true : result === "WIN" ? d.win : !d.win) &&
+              filter(d[properties.championName]),
           })
         ),
       ],
