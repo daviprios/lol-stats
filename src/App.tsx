@@ -19,14 +19,14 @@ export default function App() {
       </header>
 
       <article className="flex items-center py-4 flex-col gap-y-12">
-        <div className="flex">
+        <div className="flex -ml-52">
           <GlobalChampionSelector />
           <div className="flex flex-col">
             <ImageScatterPlot />
             <MultiLineLabeled />
           </div>
         </div>
-        <div className="flex gap-x-4">
+        <div className="flex gap-x-4 -ml-16">
           <MatchSelector />
           {currentMatch ? (
             <div className="flex flex-col gap-y-2">
