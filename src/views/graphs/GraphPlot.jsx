@@ -162,6 +162,18 @@ export default function GraphPlot() {
     [dataEdges]
   );
 
+  const filter = useCallback(
+    (d) => {
+      if (matchChampion === "T1") return d.color === "blue";
+      if (matchChampion === "T2") return d.color === "red";
+      return matchChampion
+        ? d.victim.championName === matchChampion ||
+            d.killer.championName === matchChampion
+        : true;
+    },
+    [matchChampion]
+  );
+
   useEffect(() => {
     if (dataEdges === undefined || !containerRef.current || !matchData) return;
 
@@ -183,11 +195,7 @@ export default function GraphPlot() {
           x2: ({ victim }) => victim.x,
           y2: ({ victim }) => victim.y,
           bend: true,
-          filter: (d) =>
-            matchChampion
-              ? d.victim.championName === matchChampion ||
-                d.killer.championName === matchChampion
-              : true,
+          filter: (d) => filter(d),
           stroke: ({ color }) => color,
           strokeWidth: ({ amount }) => amount,
           strokeLinejoin: "miter",
@@ -207,14 +215,7 @@ export default function GraphPlot() {
     containerRef.current.append(plot);
 
     return () => plot.remove();
-  }, [
-    dataEdges,
-    dataNodes,
-    getKillVictimInfo,
-    matchData,
-    participantsSortedByTeam,
-    matchChampion,
-  ]);
+  }, [dataEdges, dataNodes, getKillVictimInfo, matchData, participantsSortedByTeam, matchChampion, filter]);
 
   return (
     <section>

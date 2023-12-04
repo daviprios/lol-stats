@@ -1,12 +1,12 @@
 import * as Plot from "@observablehq/plot";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import jsonData from "../../data/testData";
 import jsonDataTimeline from "../../data/testDataTimeline";
 import { useMatchContext } from "../../contexts/matchContext";
 
 export default function HeatMap() {
-  const { currentMatch } = useMatchContext();
+  const { currentMatch, matchChampion } = useMatchContext();
   const containerRef = useRef(null);
 
   const matchData = useMemo(
@@ -52,10 +52,23 @@ export default function HeatMap() {
     () =>
       matchData.timeline.info.frames.flatMap(({ participantFrames }) => {
         return Object.entries(participantFrames).map(([k, v]) => {
-          return { ...v.position, championName: championByParticipantId[k] };
+          return {
+            ...v.position,
+            championName: championByParticipantId[k].championName,
+            teamId: championByParticipantId[k].teamId,
+          };
         });
       }),
     [championByParticipantId, matchData]
+  );
+
+  const filter = useCallback(
+    ({ value, teamId }) => {
+      if (matchChampion === "T1") return teamId === 100;
+      if (matchChampion === "T2") return teamId === 200;
+      return matchChampion ? matchChampion === value : true;
+    },
+    [matchChampion]
   );
 
   useEffect(() => {
@@ -89,6 +102,8 @@ export default function HeatMap() {
             {
               x: (d) => d.x,
               y: (d) => d.y,
+              filter: (d) =>
+                filter({ value: d.championName, teamId: d.teamId }),
             }
           )
         ),
@@ -97,7 +112,7 @@ export default function HeatMap() {
     containerRef.current.append(plot);
 
     return () => plot.remove();
-  }, [heatMapData]);
+  }, [filter, heatMapData, matchChampion]);
 
   return (
     <section>

@@ -16,8 +16,22 @@ export default function MatchChampionSelector() {
   );
 
   return (
-    <div className="bg-slate-700 border-2 border-white flex p-4 justify-center items-center h-[400px]">
-      <ul className="bg-white overflow-y-auto overflow-x-hidden h-full w-40">
+    <div className="bg-slate-700 border-2 border-white flex p-4 justify-center items-center h-[470px]">
+      <ul className="bg-white h-full w-40">
+        <li>
+          <button
+            className={`p-1 flex gap-x-2 items-center hover:bg-slate-400 w-full ${
+              "T1" === matchChampion ? "bg-slate-300" : ""
+            }`}
+            onClick={() =>
+              matchChampion === "T1"
+                ? setMatchChampion(undefined)
+                : setMatchChampion("T1")
+            }
+          >
+            <span>Time Azul</span>
+          </button>
+        </li>
         {matchData.data?.info.participants.map(({ championName }, i) => {
           return (
             <>
@@ -39,7 +53,23 @@ export default function MatchChampionSelector() {
                   <span>{championName}</span>
                 </button>
               </li>
-              {i === 4 && <div className="border-2 border-slate-300"></div>}
+              {i === 4 && (
+                <>
+                  <div className="border-2 border-slate-300"></div>
+                  <button
+                    className={`p-1 flex gap-x-2 items-center hover:bg-slate-400 w-full ${
+                      "T2" === matchChampion ? "bg-slate-300" : ""
+                    }`}
+                    onClick={() =>
+                      matchChampion === "T2"
+                        ? setMatchChampion(undefined)
+                        : setMatchChampion("T2")
+                    }
+                  >
+                    <span>Time Vermelho</span>
+                  </button>
+                </>
+              )}
             </>
           );
         })}
