@@ -14,17 +14,15 @@ export default function App() {
   return (
     <main className="bg-slate-700">
       <header className="flex flex-col items-center mb-4">
-        <h1 className="text-white text-2xl font-bold py-4">
-          Visualização de Dados
-        </h1>
-        <label className="text-white">
+        <h1 className="text-white text-2xl font-bold py-4">LoL Datavis</h1>
+        {/* <label className="text-white">
           <span className="pr-2">Riot ID</span>
           <input
             type="text"
             placeholder="Mordecai210#BR1"
             className="rounded-sm px-2 py-1"
           />
-        </label>
+        </label> */}
       </header>
 
       <article className="flex items-center py-4 flex-col gap-y-2">
