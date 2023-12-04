@@ -140,8 +140,6 @@ export default function GraphPlot() {
             ? "blue"
             : "red";
 
-        console.debug(killGraph, victimList, dataNodes);
-
         return {
           killer: {
             x: killerNode[0],

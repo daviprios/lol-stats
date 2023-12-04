@@ -29,9 +29,15 @@ export default function MatchSelector() {
                   onClick={() => {
                     setCurrentMatch(matchId);
                   }}
-                  className={`flex ${`bg-${player.win ? "green-" : "red-"}${
-                    currentMatch === matchId ? "500" : "300"
-                  }`} p-2 items-center min-w-[220px] border-b-2 border-slate-700`}
+                  className={`flex ${
+                    player.win
+                      ? currentMatch === matchId
+                        ? "bg-green-500"
+                        : "bg-green-300"
+                      : currentMatch === matchId
+                      ? "bg-red-500"
+                      : "bg-red-300"
+                  } p-2 items-center min-w-[220px] border-b-2 border-slate-700`}
                 >
                   <img
                     src={`/imgs/champions/${player.championName}.png`}
