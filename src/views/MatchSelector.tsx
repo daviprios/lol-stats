@@ -7,8 +7,8 @@ export default function MatchSelector() {
   const { currentMatch, setCurrentMatch, playerUuid } = useMatchContext();
 
   return (
-    <div className={"max-h-[640px] overflow-y-auto"}>
-      <ul>
+    <div className="max-h-[640px] border-2 p-4">
+      <ul className="h-full overflow-y-auto overflow-x-hidden">
         {data.map(
           ({
             info: { participants, gameStartTimestamp },
