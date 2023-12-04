@@ -32,7 +32,11 @@ export default function App() {
           <MatchSelector />
           {currentMatch ? (
             <div className="flex flex-col gap-y-2">
+              <h2 className="text-center text-white">
+                Relação assassino-vitima
+              </h2>
               <GraphPlot />
+              <h2 className="text-center text-white">Heatmap dos jogadores</h2>
               <HeatMap />
             </div>
           ) : (

@@ -1,28 +1,61 @@
 import * as Plot from "@observablehq/plot";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
-import testData from "../../assets/data/BR1_2736749630-timeline.json";
-// import { useMatchContext } from "../../contexts/matchContext";
-
-// const playerIdByPuuid = testData.info.participants.reduce(
-//   (acc, { participantId, puuid }) => {
-//     acc[puuid] = participantId;
-//     return acc;
-//   },
-//   {}
-// );
+import jsonData from "../../data/testData";
+import jsonDataTimeline from "../../data/testDataTimeline";
+import { useMatchContext } from "../../contexts/matchContext";
 
 export default function HeatMap() {
-  // const { playerUuid } = useMatchContext();
+  const { currentMatch } = useMatchContext();
   const containerRef = useRef(null);
 
-  const [heatMapData] = useState(
-    testData.info.frames.flatMap(({ participantFrames }) => {
-      // const { x, y } = participantFrames[playerIdByPuuid[playerUuid]].position;
-      return Object.entries(participantFrames).map(([, v]) => {
-        return v.position;
-      });
-    })
+  const matchData = useMemo(
+    () => ({
+      data: jsonData.find(
+        ({ metadata: { matchId } }) => currentMatch === matchId
+      ),
+      timeline: jsonDataTimeline.find(
+        ({ metadata: { matchId } }) => currentMatch === matchId
+      ),
+    }),
+    [currentMatch]
+  );
+
+  const participants = useMemo(
+    () =>
+      matchData.data.info.participants.map(
+        ({ puuid, championName, teamId }) => {
+          return { puuid, championName, teamId };
+        }
+      ),
+    [matchData]
+  );
+
+  const championByParticipantId = useMemo(
+    () =>
+      matchData.timeline.info.participants
+        .map(({ puuid, participantId }) => {
+          return {
+            participantId,
+            championName: participants.find(
+              ({ puuid: ppuuid }) => puuid === ppuuid
+            ),
+          };
+        })
+        .reduce((acc, { championName, participantId }) => {
+          return { ...acc, [participantId]: championName };
+        }, {}),
+    [matchData, participants]
+  );
+
+  const heatMapData = useMemo(
+    () =>
+      matchData.timeline.info.frames.flatMap(({ participantFrames }) => {
+        return Object.entries(participantFrames).map(([k, v]) => {
+          return { ...v.position, championName: championByParticipantId[k] };
+        });
+      }),
+    [championByParticipantId, matchData]
   );
 
   useEffect(() => {
