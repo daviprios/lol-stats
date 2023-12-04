@@ -16,7 +16,7 @@ export default function MatchChampionSelector() {
   );
 
   return (
-    <div className="bg-slate-700 border-2 border-white flex p-4 justify-center items-center h-[470px]">
+    <div className="bg-slate-700 border-2 border-white flex p-4 justify-center items-center h-[470px] sticky top-4">
       <ul className="bg-white h-full w-40">
         <li>
           <button
