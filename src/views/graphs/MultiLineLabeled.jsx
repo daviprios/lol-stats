@@ -62,7 +62,7 @@ export default function MultiLineLabeled() {
           tip: {
             pointer: "x",
             format: {
-              x: (d) => moment(d.time).format("L HH:mm"),
+              x: (x) => moment(x).format("L HH:mm"),
             },
           },
         }),

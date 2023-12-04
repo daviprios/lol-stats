@@ -6,7 +6,7 @@ import json from "../../data/testData";
 import { useMatchContext } from "../../contexts/matchContext";
 
 export default function ImageScatterPlot() {
-  const { playerUuid } = useMatchContext();
+  const { playerUuid, setGlobalChampion, globalChampion } = useMatchContext();
   const containerRef = useRef(null);
 
   const [playerData] = useState(() => {
@@ -68,10 +68,26 @@ export default function ImageScatterPlot() {
           x: "pickRate",
           y: "winRate",
           r: 20,
+          // filter: (d) =>
+          //   globalChampion ? d.championName === globalChampion : true,
+          opacity: (d) =>
+            globalChampion && d.championName !== globalChampion ? 0.1 : 1,
           preserveAspectRatio: "xMidYMin slice",
           src: (d) => `/imgs/champions/${d.championName}.png`,
           width: 40,
-          title: "championName",
+          channels: {
+            championName: {
+              label: "",
+              value: "championName",
+            },
+          },
+          tip: {
+            format: {
+              championName: true,
+              x: (x) => `${(x * 100).toFixed(0)}%`,
+              y: (y) => `${(y * 100).toFixed(0)}%`,
+            },
+          },
         }),
       ],
     });
@@ -79,11 +95,49 @@ export default function ImageScatterPlot() {
     containerRef.current.append(plot);
 
     return () => plot.remove();
-  }, [playerData]);
+  }, [globalChampion, playerData]);
+
+  console.debug(globalChampion);
 
   return (
-    <section>
-      <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
+    <section className="flex flex-col gap-x-4">
+      <h2 className="text-white m-auto">Relação Vitória/Escolha</h2>
+      <div className="flex">
+        <div className="bg-slate-700 border-2 border-white flex px-4 justify-center items-center">
+          <ul className="bg-white overflow-y-auto overflow-x-hidden h-[400px] w-40">
+            {playerData
+              .toSorted(
+                (
+                  { championName: championNameA },
+                  { championName: championNameB }
+                ) => (championNameA > championNameB ? 1 : -1)
+              )
+              .map(({ championName }) => {
+                return (
+                  <li key={championName}>
+                    <button
+                      className={`p-1 flex gap-x-2 items-center hover:bg-slate-400 w-full ${
+                        championName === globalChampion ? "bg-slate-300" : ""
+                      }`}
+                      onClick={() =>
+                        globalChampion === championName
+                          ? setGlobalChampion()
+                          : setGlobalChampion(championName)
+                      }
+                    >
+                      <img
+                        src={`/imgs/champions/${championName}.png`}
+                        className={"w-7 h-7"}
+                      />
+                      <span>{championName}</span>
+                    </button>
+                  </li>
+                );
+              })}
+          </ul>
+        </div>
+        <div className="block w-fit h-fit border-2 p-4" ref={containerRef} />
+      </div>
     </section>
   );
 }

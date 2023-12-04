@@ -10,6 +10,10 @@ const matchContext = createContext<{
   matchList: string[];
   currentMatch: string | undefined;
   setCurrentMatch: (matchId: string) => void;
+  globalChampion: string | undefined;
+  setGlobalChampion: (championName: string) => void;
+  matchChampion: string | undefined;
+  setMatchChampion: (championName: string) => void;
 }>({
   riotId: "",
   setRiotId: () => {},
@@ -17,6 +21,10 @@ const matchContext = createContext<{
   matchList: [],
   currentMatch: "",
   setCurrentMatch: () => {},
+  globalChampion: "",
+  setGlobalChampion: () => {},
+  matchChampion: "",
+  setMatchChampion: () => {},
 });
 
 export const useMatchContext = () => useContext(matchContext);
@@ -28,6 +36,8 @@ export default function MatchContext({
 }) {
   const [riotId, setRiotId] = useState<string | undefined>();
   const [currentMatch, setCurrentMatch] = useState<string | undefined>();
+  const [globalChampion, setGlobalChampion] = useState<string | undefined>();
+  const [matchChampion, setMatchChampion] = useState<string | undefined>();
 
   const uuidQuery = useQuery({
     queryKey: ["riotId", riotId],
@@ -71,6 +81,10 @@ export default function MatchContext({
         matchList: matchListQuery?.data ?? [],
         currentMatch,
         setCurrentMatch,
+        globalChampion,
+        setGlobalChampion,
+        matchChampion,
+        setMatchChampion,
       }}
     >
       {children}

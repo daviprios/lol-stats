@@ -23,7 +23,6 @@ export default function App() {
         </header>
 
         <article className="flex items-center py-4 flex-col gap-y-2">
-          <p className="text-white">Gráficos</p>
           <ImageScatterPlot />
           <MultiLineLabeled />
           <GraphPlot />
