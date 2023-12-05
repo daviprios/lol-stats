@@ -2,7 +2,7 @@ import * as Plot from "@observablehq/plot";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import testData from "../../data/testData";
+import infoData from "../../data/infoData";
 import { useMatchContext } from "../../contexts/matchContext";
 
 const properties = {
@@ -22,7 +22,7 @@ export default function MultiLineLabeled() {
   const [result, setResult] = useState("ALL");
 
   const [playerData] = useState(
-    testData.map(({ info }) => {
+    infoData.map(({ info }) => {
       const player = info.participants.find(
         ({ puuid }) => puuid === playerUuid
       );

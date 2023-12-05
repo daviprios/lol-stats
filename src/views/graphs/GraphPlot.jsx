@@ -2,8 +2,8 @@ import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import jsonData from "../../data/testData";
-import jsonDataTimeline from "../../data/testDataTimeline";
+import infoData from "../../data/infoData";
+import timelineData from "../../data/timelineData";
 import { useMatchContext } from "../../contexts/matchContext";
 
 export default function GraphPlot() {
@@ -12,10 +12,10 @@ export default function GraphPlot() {
 
   const matchData = useMemo(
     () => ({
-      data: jsonData.find(
+      data: infoData.find(
         ({ metadata: { matchId } }) => currentMatch === matchId
       ),
-      timeline: jsonDataTimeline.find(
+      timeline: timelineData.find(
         ({ metadata: { matchId } }) => currentMatch === matchId
       ),
     }),

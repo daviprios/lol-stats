@@ -1,8 +1,8 @@
 import * as Plot from "@observablehq/plot";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
-import jsonData from "../../data/testData";
-import jsonDataTimeline from "../../data/testDataTimeline";
+import infoData from "../../data/infoData";
+import timelineData from "../../data/timelineData";
 import { useMatchContext } from "../../contexts/matchContext";
 
 export default function HeatMap() {
@@ -11,10 +11,10 @@ export default function HeatMap() {
 
   const matchData = useMemo(
     () => ({
-      data: jsonData.find(
+      data: infoData.find(
         ({ metadata: { matchId } }) => currentMatch === matchId
       ),
-      timeline: jsonDataTimeline.find(
+      timeline: timelineData.find(
         ({ metadata: { matchId } }) => currentMatch === matchId
       ),
     }),

@@ -2,7 +2,7 @@ import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useMemo, useRef } from "react";
 
-import json from "../../data/testData";
+import infoData from "../../data/infoData";
 import { useMatchContext } from "../../contexts/matchContext";
 
 export default function ImageScatterPlot() {
@@ -11,7 +11,7 @@ export default function ImageScatterPlot() {
 
   const playerData = useMemo(() => {
     let totalPicks = 0;
-    const formatedData = json
+    const formatedData = infoData
       .map(({ info: { participants } }) =>
         participants.find(({ puuid }) => puuid === playerUuid)
       )

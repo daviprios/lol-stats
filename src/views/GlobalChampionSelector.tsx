@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 
 import { useMatchContext } from "../contexts/matchContext";
-import jsonData from "../data/testData";
+import infoData from "../data/infoData";
 
 export default function GlobalChampionSelector() {
   const { setGlobalChampion, globalChampion, playerUuid } = useMatchContext();
   const championList = useMemo(
     () =>
       Array.from(
-        jsonData
+        infoData
           .flatMap(({ info }) =>
             info.participants.filter(({ puuid }) => puuid === playerUuid)
           )

@@ -1,14 +1,14 @@
 import { useMemo, Fragment } from "react";
 import { useMatchContext } from "../contexts/matchContext";
 
-import jsonData from "../data/testData";
+import infoData from "../data/infoData";
 
 export default function MatchChampionSelector() {
   const { setMatchChampion, matchChampion, currentMatch } = useMatchContext();
 
   const matchData = useMemo(
     () => ({
-      data: jsonData.find(
+      data: infoData.find(
         ({ metadata: { matchId } }) => currentMatch === matchId
       )!,
     }),

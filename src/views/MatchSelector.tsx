@@ -2,20 +2,20 @@ import moment from "moment";
 import { useEffect } from "react";
 
 import { useMatchContext } from "../contexts/matchContext";
-import data from "../data/testData";
+import infoData from "../data/infoData";
 
 export default function MatchSelector() {
   const { currentMatch, setCurrentMatch, setMatchChampion, playerUuid } =
     useMatchContext();
 
   useEffect(() => {
-    setCurrentMatch(data[0].metadata.matchId);
+    setCurrentMatch(infoData[0].metadata.matchId);
   }, []);
 
   return (
     <div className="max-h-[640px] border-2 p-4 sticky top-4">
       <ul className="h-full overflow-y-auto overflow-x-hidden">
-        {data.map(
+        {infoData.map(
           ({
             info: { participants, gameStartTimestamp, gameDuration },
             metadata: { matchId },
