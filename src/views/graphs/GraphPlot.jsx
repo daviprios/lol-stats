@@ -151,13 +151,27 @@ export default function GraphPlot() {
 
   const getKillVictimInfo = useCallback(
     (championName) => {
-      return `Kills:\n${dataEdges
-        .filter(({ killer }) => killer.championName === championName)
+      const asKiller = dataEdges.filter(
+        ({ killer }) => killer.championName === championName
+      );
+      const asKillerTotal = asKiller.reduce((acc, { amount }) => {
+        return acc + amount;
+      }, 0);
+      const asKillerText = asKiller
         .map(({ victim, amount }) => `${victim.championName}: ${amount}`)
-        .join("\n")}\n\nMortes:\n${dataEdges
-        .filter(({ victim }) => victim.championName === championName)
+        .join("\n");
+
+      const asVictim = dataEdges.filter(
+        ({ victim }) => victim.championName === championName
+      );
+      const asVictimTotal = asVictim.reduce((acc, { amount }) => {
+        return acc + amount;
+      }, 0);
+      const asVictimText = asVictim
         .map(({ killer, amount }) => `${killer.championName}: ${amount}`)
-        .join("\n")}`;
+        .join("\n");
+
+      return `___KILLS___ ${asKillerTotal}\n\n${asKillerText}\n\n__MORTES__ ${asVictimTotal}\n\n${asVictimText}`;
     },
     [dataEdges]
   );
@@ -186,7 +200,6 @@ export default function GraphPlot() {
           r: 40,
           preserveAspectRatio: "xMidYMin slice",
           src: (d) => `/imgs/champions/${d[2]}.png`,
-          title: (d) => getKillVictimInfo(d[2]),
         }),
 
         Plot.arrow(dataEdges, {
@@ -209,6 +222,13 @@ export default function GraphPlot() {
           ),
           dy: 50,
         }),
+
+        Plot.tip(
+          dataNodes,
+          Plot.pointer({
+            title: (d) => getKillVictimInfo(d[2]),
+          })
+        ),
       ],
     });
 
