@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, Fragment } from "react";
 import { useMatchContext } from "../contexts/matchContext";
 
 import jsonData from "../data/testData";
@@ -34,8 +34,8 @@ export default function MatchChampionSelector() {
         </li>
         {matchData.data?.info.participants.map(({ championName }, i) => {
           return (
-            <>
-              <li key={championName}>
+            <Fragment key={championName}>
+              <li>
                 <button
                   className={`p-1 flex gap-x-2 items-center hover:bg-slate-400 w-full ${
                     championName === matchChampion ? "bg-slate-300" : ""
@@ -70,7 +70,7 @@ export default function MatchChampionSelector() {
                   </button>
                 </>
               )}
-            </>
+            </Fragment>
           );
         })}
       </ul>
